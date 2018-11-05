@@ -16,13 +16,20 @@ class Weight(models.Model):
     record_date = models.DateField(
         verbose_name="记录时间",
     )
+    weight_status = models.BooleanField(
+        verbose_name="体重记录状态",
+        default=True,
+    )
 
     @classmethod
     def new_weight(cls, user, weight, record_date):
-        ret_user = User.get_user_by_id(user.id)
-        if ret_user.id != Error.OK:
+        ret = User.get_user_by_id(user.id)
+        if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
         try:
+            count = cls.objects.filter(user=user, record_date=record_date, weight_status=True).count()
+            if count != 0:
+                cls.objects.filter(user=user, record_date=record_date, weight_status=True).update(weight_status=False)
             o_weight = cls(
                 user=user,
                 weight=weight,
@@ -36,15 +43,15 @@ class Weight(models.Model):
 
     @classmethod
     def get_weight(cls, user, record_date):
-        ret_user = User.get_user_by_id(user.id)
-        if ret_user.id != Error.OK:
+        ret = User.get_user_by_id(user.id)
+        if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
         weight_list = []
         start = 0
-        end = cls.objects.filter(user=user, record_date=record_date).count()
+        end = cls.objects.filter(user=user, record_date=record_date, weight_status=True).count()
 
         try:
-            for o_weight in cls.objects.filter(user=user, record_date=record_date)[start:end]:
+            for o_weight in cls.objects.filter(user=user, record_date=record_date, weight_status=True)[start:end]:
                 weight_list.append(o_weight.to_dict())
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_WEIGHT)

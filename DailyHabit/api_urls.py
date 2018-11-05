@@ -5,5 +5,5 @@ urlpatterns = {
     path('goal/', include('Goal.api_urls')),
     path('record/', include('Record.api_urls')),
     path('weight/', include('Weight.api_urls')),
-    # path('Account', include('Account.api_urls')),
+    path('cost/', include('Cost.api_urls')),
 }

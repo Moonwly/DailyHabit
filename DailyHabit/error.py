@@ -30,7 +30,9 @@ class Error:
     NOT_FOUND_RECORD_OF_DATE = E("未查找到该日期的打卡记录")
     NEW_WEIGHT_FAILED = E("新建体重记录失败")
     NOT_FOUND_WEIGHT = E("未查找到体重记录")
-
+    NEW_COST_FAILED = E("新建消费记录失败")
+    DELETE_COST_FAILED = E("删除消费记录失败")
+    NOT_FOUND_COST = E("未查找到消费记录")
 
 
 

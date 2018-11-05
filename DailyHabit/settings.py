@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'Goal',
     'Record',
     'Weight',
+    'Cost',
 ]
 
 MIDDLEWARE = [

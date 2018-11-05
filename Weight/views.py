@@ -16,10 +16,10 @@ class NewWeightView(View):
         record_date = weight_info["record_date"]
         user_id = request.session.get("user_id", False)
 
-        ret_user = User.get_user_by_id(user_id)
-        if ret_user.id != Error.OK:
+        ret = User.get_user_by_id(user_id)
+        if ret.id != Error.OK:
             return response(Error.NOT_FOUND_USER)
-        o_user = ret_user.body
+        o_user = ret.body
         ret = Weight.new_weight(o_user, weight, record_date)
         return response(ret.id)
 
@@ -30,10 +30,10 @@ class GetWeightView(View):
         record_date = request.GET["record_date"]
         user_id = request.session.get("user_id", False)
 
-        ret_user = User.get_user_by_id(user_id)
-        if ret_user.id != Error.OK:
+        ret = User.get_user_by_id(user_id)
+        if ret.id != Error.OK:
             return response(Error.NOT_FOUND_USER)
-        o_user = ret_user.body
+        o_user = ret.body
         ret = Weight.get_weight(o_user, record_date)
         if ret.id != Error.OK:
             return response(ret.id)
