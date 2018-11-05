@@ -1,5 +1,6 @@
 import json
 from datetime import date, time
+from decimal import Decimal
 
 from django.http import HttpResponse
 
@@ -26,5 +27,7 @@ class OtherEncoder(json.JSONEncoder):
         if isinstance(obj, date):
             return obj.__str__()
         elif isinstance(obj, time):
+            return obj.__str__()
+        elif isinstance(obj, Decimal):
             return obj.__str__()
         return json.JSONEncoder.default(self, obj)

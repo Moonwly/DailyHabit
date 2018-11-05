@@ -59,7 +59,7 @@ class Goal(models.Model):
     @classmethod
     def get_goal_by_id(cls, goal_id):
         try:
-            o_goal = cls.objects.get(id=goal_id)
+            o_goal = cls.objects.get(id=goal_id, is_delete=False)
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_GOAL)
         return Ret(Error.OK, o_goal)
@@ -71,10 +71,10 @@ class Goal(models.Model):
             return Ret(Error.NOT_FOUND_USER)
         goal_list = []
         start = 0
-        end = cls.objects.filter(user=user).count()
+        end = cls.objects.filter(user=user, is_delete=False).count()
 
         try:
-            for o_goal in cls.objects.filter(user=user)[start:end]:
+            for o_goal in cls.objects.filter(user=user, is_delete=False)[start:end]:
                 goal_list.append(o_goal.to_dict())
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_GOAL_OF_USER)
@@ -86,7 +86,7 @@ class Goal(models.Model):
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
         try:
-            o_goal = cls.objects.get(id=goal_id, user_id=user.id)
+            o_goal = cls.objects.get(id=goal_id, user=user, is_delete=False)
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_GOAL)
         return Ret(Error.OK, o_goal)
@@ -126,7 +126,7 @@ class Goal(models.Model):
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_GOAL)
         try:
-            cls.objects.filter(id=goal_id).update(goal_status=False)
+            cls.objects.filter(user=user, id=goal_id, is_delete=False).update(goal_status=False)
         except Exception as err:
             print(err)
             return Ret(Error.FINISH_GOAL_FAILED)
@@ -141,7 +141,7 @@ class Goal(models.Model):
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_GOAL)
         try:
-            cls.objects.filter(id=goal_id).update(goal_status=True)
+            cls.objects.filter(user=user, id=goal_id, is_delete=False).update(goal_status=True)
         except Exception as err:
             print(err)
             return Ret(Error.FINISH_GOAL_FAILED)
@@ -156,7 +156,7 @@ class Goal(models.Model):
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_GOAL)
         try:
-            cls.objects.filter(id=goal_id).update(is_delete=True)
+            cls.objects.filter(user=user, id=goal_id, is_delete=False).update(is_delete=True)
         except Exception as err:
             print(err)
             return Ret(Error.DELETE_GOAL_FAILED)
@@ -172,11 +172,15 @@ class Goal(models.Model):
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_GOAL)
         try:
-            cls.objects.filter(id=goal_id).update(goal_status=goal_status, goal_name=goal_name,
-                                                  goal_type=goal_type, inspiration=inspiration,
-                                                  start_date=start_date, end_date=end_date,
-                                                  repeat_time=repeat_time, total_day=total_day,
-                                                  is_reminding=is_reminding, reminding_time=reminding_time)
+            cls.objects.filter(user=user, id=goal_id, is_delete=False).update(goal_status=goal_status,
+                                                                              goal_name=goal_name,
+                                                                              goal_type=goal_type,
+                                                                              inspiration=inspiration,
+                                                                              start_date=start_date, end_date=end_date,
+                                                                              repeat_time=repeat_time,
+                                                                              total_day=total_day,
+                                                                              is_reminding=is_reminding,
+                                                                              reminding_time=reminding_time)
         except Exception as err:
             print(err)
             return Ret(Error.MODIFY_GOAL_FAILED)
@@ -189,10 +193,10 @@ class Goal(models.Model):
             return Ret(Error.NOT_FOUND_USER)
         goal_list = []
         start = 0
-        end = cls.objects.filter(user=user, goal_status=goal_status).count()
+        end = cls.objects.filter(user=user, goal_status=goal_status, is_delete=False).count()
 
         try:
-            for o_goal in cls.objects.filter(user=user, goal_status=goal_status)[start:end]:
+            for o_goal in cls.objects.filter(user=user, goal_status=goal_status, is_delete=False)[start:end]:
                 goal_list.append(o_goal.to_dict())
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_GOAL_OF_STATUS)

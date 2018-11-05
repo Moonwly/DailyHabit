@@ -25,5 +25,12 @@ class Error:
     NOT_FOUND_GOAL_OF_USER = E("未查找到用户的目标")
     NOT_FOUND_GOAL_OF_STATUS = E("未查找到该状态的目标")
     NEW_RECORD_FAILED = E("新建打卡记录失败")
+    CANCEL_RECORD_FAILED = E("取消打卡失败")
+    NOT_FOUND_RECORD_OF_USER = E("未查找到打卡记录")
+    NOT_FOUND_RECORD_OF_DATE = E("未查找到该日期的打卡记录")
+    NEW_WEIGHT_FAILED = E("新建体重记录失败")
+    NOT_FOUND_WEIGHT = E("未查找到体重记录")
+
+
 
 
