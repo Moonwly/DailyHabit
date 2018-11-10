@@ -1,7 +1,7 @@
 from django.urls import path
 
 from Goal.views import NewGoalView, FinishGoalView, RestartGoalView, DeleteGoalView, ModifyGoalView, \
-    GetUserGoalByIDView, GetGoalByUser, GetUserGoalsByGoalStatus
+    GetUserGoalByIDView, GetGoalByUserView, GetUserGoalsByGoalStatusView, GetUserTodayGoalsView
 
 urlpatterns = {
     path('new_goal', NewGoalView.as_view()),
@@ -10,6 +10,7 @@ urlpatterns = {
     path('delete_goal', DeleteGoalView.as_view()),
     path('modify_goal', ModifyGoalView.as_view()),
     path('get_user_goal_by_id', GetUserGoalByIDView.as_view()),
-    path('get_goal_by_user', GetGoalByUser.as_view()),
-    path('get_user_goal_by_goal_status', GetUserGoalsByGoalStatus.as_view()),
+    path('get_goal_by_user', GetGoalByUserView.as_view()),
+    path('get_user_goal_by_goal_status', GetUserGoalsByGoalStatusView.as_view()),
+    path('get_user_today_goals', GetUserTodayGoalsView.as_view()),
 }

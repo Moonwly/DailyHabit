@@ -116,7 +116,7 @@ class GetUserGoalByIDView(View):
         return response(ret.id, ret.body.to_dict())
 
 
-class GetGoalByUser(View):
+class GetGoalByUserView(View):
     @staticmethod
     def get(request):
         user_id = request.session.get("user_id", False)
@@ -131,7 +131,7 @@ class GetGoalByUser(View):
         return response(ret.id, ret.body)
 
 
-class GetUserGoalsByGoalStatus(View):
+class GetUserGoalsByGoalStatusView(View):
     @staticmethod
     def get(request):
         goal_status = request.GET["goal_status"]
@@ -146,3 +146,19 @@ class GetUserGoalsByGoalStatus(View):
             return response(ret.id)
         return response(ret.id, ret.body)
 
+
+class GetUserTodayGoalsView(View):
+    @staticmethod
+    def get(request):
+        today_date = request.GET["today_date"]
+        today_day = request.GET["today_day"]
+        user_id = request.session["user_id"]
+
+        ret = User.get_user_by_id(user_id)
+        if ret.id != Error.OK:
+            return response(Error.NOT_FOUND_USER)
+        o_user = ret.body
+        ret = Goal.get_user_today_goals(o_user, today_date, today_day)
+        if ret.id != Error.OK:
+            return response(ret.id)
+        return response(ret.id, ret.body)

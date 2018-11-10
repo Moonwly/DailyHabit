@@ -34,14 +34,16 @@ class Goal(models.Model):
     end_date = models.DateField(
         verbose_name="结束日期",
     )
+    # 0-6: 周日-周六
     repeat_time = models.CharField(
         verbose_name="重复时间",
         max_length=L['repeat_time'],
-        default="MON, TUE, WED, THU, FRI, SAT, SUN,",
+        default="0123456,",
+        null=True,
     )
     total_day = models.IntegerField(
         verbose_name="总天数",
-        default=0,
+        default=-1,
     )
     is_reminding = models.BooleanField(
         verbose_name="是否开启提醒",
@@ -197,6 +199,21 @@ class Goal(models.Model):
 
         try:
             for o_goal in cls.objects.filter(user=user, goal_status=goal_status, is_delete=False)[start:end]:
+                goal_list.append(o_goal.to_dict())
+        except cls.DoesNotExist:
+            return Ret(Error.NOT_FOUND_GOAL_OF_STATUS)
+        return Ret(Error.OK, dict(goal_list=goal_list))
+
+    @classmethod
+    def get_user_today_goals(cls, user, today_date, today_day):
+        ret = User.get_user_by_id(user.id)
+        if ret.id != Error.OK:
+            return Ret(Error.NOT_FOUND_USER)
+        goal_list = []
+        start = 0
+        end = cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True).count()
+        try:
+            for o_goal in cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True)[start:end]:
                 goal_list.append(o_goal.to_dict())
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_GOAL_OF_STATUS)

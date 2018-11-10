@@ -37,5 +37,7 @@ class LoginView(View):
         request.session["user_id"] = ret.body.id
         return response(ret.id, ret.body.to_dict())
 
+
+# TODO: logout
 # TODO: modify_password
 # TODO: modify_username
