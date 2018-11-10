@@ -20,6 +20,7 @@ class Goal(models.Model):
         verbose_name="目标名",
         max_length=L['goal_name'],
     )
+    # 1:健康 2:学习 3:工作 4:日常
     goal_type = models.IntegerField(
         verbose_name="目标类型",
         default=0,

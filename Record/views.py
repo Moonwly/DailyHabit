@@ -15,7 +15,6 @@ class NewRecordView(View):
         record_info = json.loads(request.body.decode())
         goal_id = record_info["goal_id"]
         record_date = record_info["record_date"]
-        record_feeling = record_info["record_feeling"]
         user_id = request.session.get("user_id", False)
 
         ret_user = User.get_user_by_id(user_id)
@@ -26,7 +25,7 @@ class NewRecordView(View):
         if ret_goal.id != Error.OK:
             return response(Error.NOT_FOUND_GOAL)
         o_goal = ret_goal.body
-        ret = Record.new_record(o_user, o_goal, record_date, record_feeling)
+        ret = Record.new_record(o_user, o_goal, record_date)
         return response(ret.id)
 
 
@@ -34,7 +33,7 @@ class CancelRecordView(View):
     @staticmethod
     def get(request):
         goal_id = request.GET["goal_id"]
-        record_id = request.GET["record_id"]
+        record_date = request.GET["record_date"]
         user_id = request.session.get("user_id", False)
 
         ret_user = User.get_user_by_id(user_id)
@@ -45,7 +44,7 @@ class CancelRecordView(View):
         if ret_goal.id != Error.OK:
             return response(Error.NOT_FOUND_GOAL)
         o_goal = ret_goal.body
-        ret = Record.cancel_record(o_user, o_goal, record_id)
+        ret = Record.cancel_record(o_user, o_goal, record_date)
         return response(ret.id)
 
 

@@ -22,7 +22,7 @@ class Record(models.Model):
     )
 
     @classmethod
-    def new_record(cls, user, goal, record_date, record_feeling):
+    def new_record(cls, user, goal, record_date):
         ret_user = User.get_user_by_id(user.id)
         if ret_user.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
@@ -34,17 +34,18 @@ class Record(models.Model):
                 user=user,
                 goal=goal,
                 record_date=record_date,
-                record_feeling=record_feeling,
             )
             o_record.save()
-            Goal.objects.filter(goal=goal).update(recorded_times=Goal.recorded_times + 1)
+            o_goal = Goal.objects.get(id=goal.id)
+            o_goal.recorded_times += 1
+            o_goal.save()
         except Exception as err:
             print(err)
             return Ret(Error.NEW_RECORD_FAILED)
         return Ret(Error.OK)
 
     @classmethod
-    def cancel_record(cls, user, goal, record_id):
+    def cancel_record(cls, user, goal, record_date):
         ret_user = User.get_user_by_id(user.id)
         if ret_user.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
@@ -52,7 +53,10 @@ class Record(models.Model):
         if ret_goal.id != Error.OK:
             return Ret(Error.NOT_FOUND_GOAL)
         try:
-            cls.objects.filter(user=user, goal=goal, id=record_id, record_status=True).update(record_status=False)
+            cls.objects.filter(user=user, goal=goal, record_date=record_date, record_status=True).update(record_status=False)
+            o_goal = Goal.objects.get(id=goal.id)
+            o_goal.recorded_times -= 1
+            o_goal.save()
         except Exception as err:
             print(err)
             return Ret(Error.CANCEL_RECORD_FAILED)
