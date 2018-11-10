@@ -37,6 +37,7 @@ class Record(models.Model):
                 record_feeling=record_feeling,
             )
             o_record.save()
+            Goal.objects.filter(goal=goal).update(recorded_times=Goal.recorded_times + 1)
         except Exception as err:
             print(err)
             return Ret(Error.NEW_RECORD_FAILED)
@@ -92,6 +93,31 @@ class Record(models.Model):
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_RECORD_OF_DATE)
         return Ret(Error.OK, dict(record_list=record_list))
+
+    @classmethod
+    def get_is_recorded_today(cls, user, goal, record_date):
+        ret_user = User.get_user_by_id(user.id)
+        if ret_user.id != Error.OK:
+            return Ret(Error.NOT_FOUND_USER)
+        ret_goal = Goal.get_goal_by_id(goal.id)
+        if ret_goal.id != Error.OK:
+            return Ret(Error.NOT_FOUND_GOAL)
+        try:
+            cls.objects.get(user=user, goal=goal, record_date=record_date, record_status=True)
+        except cls.DoesNotExist:
+            return Ret(Error.NOT_FOUND_RECORD_OF_DATE)
+        return Ret(Error.OK)
+
+    @classmethod
+    def get_recorded_times_of_goal(cls, user, goal, today_date):
+        ret_user = User.get_user_by_id(user.id)
+        if ret_user.id != Error.OK:
+            return Ret(Error.NOT_FOUND_USER)
+        ret_goal = Goal.get_goal_by_id(goal.id)
+        if ret_goal.id != Error.OK:
+            return Ret(Error.NOT_FOUND_GOAL)
+        count = cls.objects.filter(user=user, goal=goal, record_date__lte=today_date, record_status=True).count()
+        return Ret(Error.OK, dict(count=count))
 
     def to_dict(self):
         return dict(

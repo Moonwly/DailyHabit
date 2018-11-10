@@ -5,6 +5,7 @@ from django.views import View
 from DailyHabit.error import Error
 from DailyHabit.response import response
 from Goal.models import Goal
+from Record.models import Record
 from User.models import User
 
 

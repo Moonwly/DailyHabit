@@ -41,9 +41,9 @@ class Goal(models.Model):
         default="0123456,",
         null=True,
     )
-    total_day = models.IntegerField(
+    recorded_times = models.IntegerField(
         verbose_name="总天数",
-        default=-1,
+        default=0,
     )
     is_reminding = models.BooleanField(
         verbose_name="是否开启提醒",
@@ -95,7 +95,7 @@ class Goal(models.Model):
 
     @classmethod
     def new_goal(cls, user, goal_name, goal_status, goal_type, inspiration,
-                 start_date, end_date, repeat_time, total_day, is_reminding, reminding_time):
+                 start_date, end_date, repeat_time, is_reminding, reminding_time):
         ret = User.get_user_by_id(user.id)
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
@@ -109,7 +109,6 @@ class Goal(models.Model):
                 start_date=start_date,
                 end_date=end_date,
                 repeat_time=repeat_time,
-                total_day=total_day,
                 is_reminding=is_reminding,
                 reminding_time=reminding_time,
             )
@@ -180,7 +179,6 @@ class Goal(models.Model):
                                                                               inspiration=inspiration,
                                                                               start_date=start_date, end_date=end_date,
                                                                               repeat_time=repeat_time,
-                                                                              total_day=total_day,
                                                                               is_reminding=is_reminding,
                                                                               reminding_time=reminding_time)
         except Exception as err:
@@ -214,7 +212,14 @@ class Goal(models.Model):
         end = cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True).count()
         try:
             for o_goal in cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True)[start:end]:
-                goal_list.append(o_goal.to_dict())
+                o_goal_dict = o_goal.to_dict()
+                from Record.models import Record
+                ret_is_recoed_today = Record.get_is_recorded_today(user, o_goal, today_date)
+                if ret_is_recoed_today.id == Error.OK:
+                    o_goal_dict["is_recorded_today"] = "True"
+                else:
+                    o_goal_dict["is_recorded_today"] = "False"
+                goal_list.append(o_goal_dict)
         except cls.DoesNotExist:
             return Ret(Error.NOT_FOUND_GOAL_OF_STATUS)
         return Ret(Error.OK, dict(goal_list=goal_list))
@@ -229,7 +234,7 @@ class Goal(models.Model):
             start_date=self.start_date,
             end_date=self.end_date,
             repeat_time=self.repeat_time,
-            total_day=self.total_day,
+            recorded_times=self.recorded_times,
             is_reminding=self.is_reminding,
             reminding_time=self.reminding_time,
         )
