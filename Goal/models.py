@@ -181,6 +181,7 @@ class Goal(models.Model):
                                                                               start_date=start_date,
                                                                               end_date=end_date,
                                                                               repeat_time=repeat_time,
+                                                                              record_times=record_times;
                                                                               is_reminding=is_reminding,
                                                                               reminding_time=reminding_time)
         except Exception as err:
