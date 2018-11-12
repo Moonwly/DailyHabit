@@ -96,7 +96,7 @@ class Goal(models.Model):
 
     @classmethod
     def new_goal(cls, user, goal_name, goal_status, goal_type, inspiration,
-                 start_date, end_date, repeat_time, is_reminding, reminding_time):
+                 start_date, end_date, repeat_time, recorded_times, is_reminding, reminding_time):
         ret = User.get_user_by_id(user.id)
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
@@ -110,6 +110,7 @@ class Goal(models.Model):
                 start_date=start_date,
                 end_date=end_date,
                 repeat_time=repeat_time,
+                recorded_times=recorded_times,
                 is_reminding=is_reminding,
                 reminding_time=reminding_time,
             )

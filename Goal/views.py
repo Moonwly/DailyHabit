@@ -20,7 +20,7 @@ class NewGoalView(View):
         start_date = goal_info["start_date"]
         end_date = goal_info["end_date"]
         repeat_time = goal_info["repeat_time"]
-        total_day = goal_info["total_day"]
+        recorded_times = goal_info["recorded_times"]
         is_reminding = goal_info["is_reminding"]
         reminding_time = goal_info["reminding_time"]
         user_id = request.session.get("user_id", False)
@@ -30,7 +30,7 @@ class NewGoalView(View):
             return response(Error.NOT_FOUND_USER)
         o_user = ret.body
         ret = Goal.new_goal(o_user, goal_name, goal_status, goal_type, inspiration, start_date,
-                            end_date, repeat_time, total_day, is_reminding, reminding_time)
+                            end_date, repeat_time, recorded_times, is_reminding, reminding_time)
         return response(ret.id)
 
 
