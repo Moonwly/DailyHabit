@@ -215,7 +215,7 @@ class Goal(models.Model):
         start = 0
         end = cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True).count()
         try:
-            for o_goal in cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True)[start:end]:
+            for o_goal in cls.objects.filter(start_date__lte=today_date, end_date__gte=today_date, repeat_time__contains=today_day, goal_status=True, is_delete=False)[start:end]:
                 o_goal_dict = o_goal.to_dict()
                 from Record.models import Record
                 ret_is_recoed_today = Record.get_is_recorded_today(user, o_goal, today_date)
