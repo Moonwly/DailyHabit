@@ -166,7 +166,7 @@ class Goal(models.Model):
 
     @classmethod
     def modify_goal(cls, user, goal_id, goal_status, goal_name, goal_type, inspiration,
-                    start_date, end_date, repeat_time, total_day, is_reminding, reminding_time):
+                    start_date, end_date, repeat_time, record_times, is_reminding, reminding_time):
         ret = User.get_user_by_id(user.id)
         if ret.id != Error.OK:
             return Ret(Error.NOT_FOUND_USER)
@@ -178,7 +178,8 @@ class Goal(models.Model):
                                                                               goal_name=goal_name,
                                                                               goal_type=goal_type,
                                                                               inspiration=inspiration,
-                                                                              start_date=start_date, end_date=end_date,
+                                                                              start_date=start_date,
+                                                                              end_date=end_date,
                                                                               repeat_time=repeat_time,
                                                                               is_reminding=is_reminding,
                                                                               reminding_time=reminding_time)
