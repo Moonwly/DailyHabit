@@ -39,7 +39,7 @@ class LoginView(View):
 
 class Logout(View):
     @staticmethod
-    def post(request):
+    def get(request):
         del request.session["user_id"]
         return response(Error.OK)
 
