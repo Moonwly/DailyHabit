@@ -153,7 +153,7 @@ class GetUserTodayGoalsView(View):
     def get(request):
         today_date = request.GET["today_date"]
         today_day = request.GET["today_day"]
-        user_id = request.session["user_id"]
+        user_id = request.session.get("user_id", False)
 
         ret = User.get_user_by_id(user_id)
         if ret.id != Error.OK:
