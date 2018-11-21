@@ -37,6 +37,12 @@ class LoginView(View):
         return response(ret.id, ret.body.to_dict())
 
 
+class Logout(View):
+    @staticmethod
+    def post(request):
+        del request.session["user_id"]
+        return response(Error.OK)
+
 # TODO: logout
 # TODO: modify_password
 # TODO: modify_username
