@@ -45,13 +45,12 @@ class User(models.Model):
         return Ret(Error.OK, o_user)
 
     @classmethod
-    def create_user(cls, username, password, email):
-        if not Valid.valid_email(email) or not Valid.valid_username(username) or not Valid.valid_password(password):
+    def create_user(cls, password, email):
+        if not Valid.valid_email(email) or not Valid.valid_password(password):
             return Ret(Error.INCORRECT_PARAMETER)
         try:
             o_user = cls(
                 email=email,
-                username=username,
                 password=password,
             )
             ret = User.get_user_by_email(email)

@@ -13,11 +13,10 @@ class CreateUserView(View):
     @staticmethod
     def post(request):
         user_info = json.loads(request.body.decode())
-        username = user_info["username"]
         password = user_info["password"]
         email = user_info["email"]
 
-        ret = User.create_user(username, password, email)
+        ret = User.create_user(password, email)
         if ret.id != Error.OK:
             return response(ret.id)
         request.session["user_id"] = ret.body.id
